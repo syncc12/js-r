@@ -1,0 +1,13 @@
+const ajaxPath = (endpoint, port=8080) => {
+  if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    console.log('endpoint',`http://localhost:${port}/`);
+    return `http://localhost:${port}/${endpoint}`;
+  } else {
+    // console.log('endpoint','https://jobsearch-react-api.herokuapp.com/');
+    // return `https://jobsearch-react-api.herokuapp.com/${endpoint}`;
+    return `https://jobsearch-patricklyden.herokuapp.com/${endpoint}`;
+  }
+    
+};
+
+export default ajaxPath;

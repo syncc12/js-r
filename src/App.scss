@@ -1,0 +1,56 @@
+@import "./master.scss";
+
+$box-color: #393939;
+.shadow-box {
+  // display: table;
+  border: 1px solid $box-color;
+  border-radius: 10px;
+  background: white;
+  padding: 10px;
+  margin: 5px;
+  -moz-box-shadow: -3px 3px 5px -3px $box-color;
+  -webkit-box-shadow: -3px 3px 5px -3px $box-color;
+  box-shadow: -3px 3px 5px -3px $box-color;
+}
+
+.custom-modal-size {
+  width: 90%;
+  max-width: none !important;
+}
+
+$icon-shadow-h1: 1px;
+$icon-shadow-w1: 1px;
+$icon-shadow-h2: -1px;
+$icon-shadow-w2: -1px;
+$icon-shadow-br: 0px;
+$icon-shadow-c: #FFF;
+.share-icon {
+  text-shadow: $icon-shadow-h1 $icon-shadow-w1 $icon-shadow-br $icon-shadow-c, $icon-shadow-h2 $icon-shadow-w2 $icon-shadow-br $icon-shadow-c;
+  color: #999;
+}
+
+.question-icon {
+  text-shadow: $icon-shadow-h1 $icon-shadow-w1 $icon-shadow-br $icon-shadow-c, $icon-shadow-h2 $icon-shadow-w2 $icon-shadow-br $icon-shadow-c;
+  color: #999;
+}
+
+.form-checkbox {
+  z-index: 2;
+}
+
+.hide-tag {
+  display: none;
+}
+
+.show-tag {
+  display: block;
+}
+
+.card-link-body {
+  display: flex;
+  justify-content: space-around;
+}
+
+.card-link {
+  margin: 5px;
+}

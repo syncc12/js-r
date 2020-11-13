@@ -1,0 +1,74 @@
+@import "../../master.scss";
+
+#home-page {
+
+}
+
+#home-signed-in {
+  height: 100%;
+  width: 100%;
+}
+.home-square {
+  height: 200px;
+  width: 400px;
+  border: 1px solid #000;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-square:hover {
+  color: #000;
+  text-decoration: none;
+}
+
+.home-square-text {
+  font-size: 40px;
+  text-align: center;
+}
+
+#home-signed-out {
+  
+}
+
+
+
+#home-s-ui-id {
+  height: 100vh;
+  width: 100%;
+}
+
+.home-s-ui, .home-s-ui div {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+}
+
+$transition: filter 1s ease;
+#home-sign-up {
+  height: 100vh;
+  background: white;
+}
+
+#home-sign-up:hover {
+  height: 100vh;
+  filter: invert(100%);
+  -webkit-transition: $transition;
+  -moz-transition: $transition;
+  transition: $transition;
+}
+
+#home-sign-in {
+  height: 100vh;
+  background: white;
+}
+
+#home-sign-in:hover {
+  height: 100vh;
+  filter: invert(100%);
+  -webkit-transition: $transition;
+  -moz-transition: $transition;
+  transition: $transition;
+}
