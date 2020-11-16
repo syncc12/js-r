@@ -5,7 +5,7 @@ const ajaxPath = (endpoint, port=8080) => {
   } else {
     // console.log('endpoint','https://jobsearch-react-api.herokuapp.com/');
     // return `https://jobsearch-react-api.herokuapp.com/${endpoint}`;
-    return `https://jobsearch-patricklyden.herokuapp.com/${endpoint}`;
+    return `https://js-r.herokuapp.com/${endpoint}`;
   }
     
 };
