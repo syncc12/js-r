@@ -2,6 +2,7 @@ import React from 'react';
 import Table from 'react-bootstrap/Table';
 import Shows from '../Shows/Shows';
 import TableRows from '../TableRows/TableRows';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class Tables extends React.Component {
 
@@ -14,13 +15,13 @@ class Tables extends React.Component {
 
   headerConvert = (inHeader) => {
     const convertJSON = {
-      '#':<i className="fas fa-hashtag"></i>,
-      'Transfer':<i className="fas fa-exchange-alt"></i>,
-      'Applied':<span className="fa-stack fa-xs"><i className="fas fa-stack-2x fa-file"></i><i className="fas fa-stack-1x fa-share share-icon"></i></span>,
+      '#':<FontAwesomeIcon icon={['fad','hashtag']} />,
+      'Transfer':<FontAwesomeIcon icon={['fad','exchange-alt']} />,
+      'Applied':<FontAwesomeIcon icon={['fad','check-circle']} />,
       'Open':<span className="fa-stack fa-xs"><i className="fas fa-stack-2x fa-spinner"></i><i className="fas fa-stack-1x fa-question question-icon"></i></span>,
-      'Website URL':<i className="fas fa-globe"></i>,
-      'Email Address':<i className="fas fa-envelope"></i>,
-      'Phone Number':<i className="fas fa-phone"></i>
+      'Website URL':<FontAwesomeIcon icon={['fad','globe']} />,
+      'Email Address':<FontAwesomeIcon icon={['fad','envelope']} />,
+      'Phone Number':<FontAwesomeIcon icon={['fad','phone']} />
     };
 
     if (convertJSON.hasOwnProperty(inHeader)) {

@@ -1,12 +1,16 @@
 import React from 'react';
+import { GlobalContext } from '../../contexts/global-context';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 import ajaxPath from '../../helpers/ajax';
 import Forms from '../Forms/Forms';
+// import pluralize from 'pluralize'
+
 
 class Notes extends React.Component {
+  static contextType = GlobalContext;
 
   constructor() {
     super();
@@ -16,11 +20,31 @@ class Notes extends React.Component {
     }
   }
 
+  filterNotes = (inNotes) => {
+    const { tableName, recordID } = this.props;
+    const { userID } = this.context;
+    // console.log(userID);
+
+    function noteFilter(item) {
+      if (item.table_name === tableName && item.record_id === recordID && item.user_id === userID) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    return inNotes.filter(noteFilter);
+
+  }
+
   getNotes = () => {
-    const { route } = this.props;
+    // const { route } = this.props;
+    const route = 'notes';
     axios.get(ajaxPath(route))
     .then((res) => {
-      this.setState({noteData: res.data});
+      const filteredNotes = this.filterNotes(res.data);
+      // console.log('filteredNotes',filteredNotes);
+      this.setState({noteData: filteredNotes});
     })
     .catch((err) => console.log(err));
   }
@@ -39,9 +63,11 @@ class Notes extends React.Component {
   }
 
   render() {
-    const { route } = this.props;
     const { show, noteData } = this.state;
-    const inputArr = [['Note','note','textarea']];
+    const { tableName, recordID } = this.props;
+    // const { route } = this.props;
+    const route = 'notes';
+    const inputArr = [['Note','note_text','textarea']];
     const inputPattern = [['12']];
 
 
@@ -56,7 +82,7 @@ class Notes extends React.Component {
             <Modal.Title id="shows-modal_title">{''}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Forms endpoint={route} inputArr={inputArr} inputPattern={inputPattern} addData={this.addData} />
+            <Forms endpoint={route} inputArr={inputArr} inputPattern={inputPattern} addData={this.addData} note={{tableName:tableName,recordID:recordID}} />
             <br/>
             <Table hover responsive>
               <thead>
@@ -65,7 +91,7 @@ class Notes extends React.Component {
               <tbody>
                 {noteData.map((dataTD,index) => <tr key={`tr${index}`}>
                   <td key={`A${index+1}`}>{index+1}</td>
-                  <td key={`B${index+1}`}>{dataTD['note']}</td>
+                  <td key={`B${index+1}`}>{dataTD['note_text']}</td>
                   <td key={`C${index+1}`}>{dataTD['created_at']}</td>
                 </tr>)}
               </tbody>

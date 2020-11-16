@@ -37,9 +37,6 @@ class Jobs extends React.Component {
     const inputArr = [['Title','title','input'],['Company','company','input'],['Job Type','job_type','input'],['Address','address','input'],['Phone Number','phone_number','input'],['Email Address','email','input'],['Website URL','website_url','input'],['Job Description','job_description','textarea']];
     const headers = [
         ['#','id'],
-        ['Transfer', 'transferred'],
-        ['Applied','application_status'],
-        ['Open','consideration_status'],
         ['Title','title'],
         ['Job Type','job_type'],
         ['Company','company'],

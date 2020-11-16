@@ -1,5 +1,7 @@
 import React from 'react';
 import './SignUp.scss';
+import axios from 'axios';
+import ajaxPath from '../../helpers/ajax';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -37,8 +39,18 @@ class SignUp extends React.Component {
     }
   }
 
+  postSignUp = (firstName, lastName, username, emailAddress, password, confirmPassword) => {
+    const postJSON = {user:{first_name:firstName, last_name:lastName, username:username, email:emailAddress, password:password, password_confirmation:confirmPassword}};
+    axios.post(ajaxPath('users'), postJSON)
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => console.log(err));
+  }
+
   signUpHandler = (e) => {
     this.setState({firstName:e.target[0].value,lastName:e.target[1].value,username:e.target[2].value,emailAddress:e.target[3].value,password:e.target[4].value,confirmPassword:e.target[5].value})
+    this.postSignUp(e.target[0].value,e.target[1].value,e.target[2].value,e.target[3].value,e.target[4].value,e.target[5].value,);
     e.preventDefault();
   }
 

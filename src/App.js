@@ -1,8 +1,16 @@
 import React from 'react';
 import './App.scss';
 import { GlobalContext } from './contexts/global-context';
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { far } from "@fortawesome/pro-regular-svg-icons";
+import { fab } from "@fortawesome/free-brands-svg-icons";
+import { fad } from "@fortawesome/pro-duotone-svg-icons";
+import { fal } from "@fortawesome/pro-light-svg-icons";
 import Layouts from './components/Layouts/Layouts';
 // import Layout from './stitch/Layout';
+
+library.add(fas, far, fab, fad, fal);
 
 class App extends React.Component {
 
@@ -19,7 +27,7 @@ class App extends React.Component {
     this.state = {
       signedIn: true,
       changeSignedInStatus: this.changeSignedInStatus,
-      userID: 0,
+      userID: 1,
       changeUserID: this.changeUserID,
       cdFormat: false
     };

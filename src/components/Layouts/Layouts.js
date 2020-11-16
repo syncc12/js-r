@@ -7,7 +7,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import pages from '../../JSONs/pages';
-import DynamicComponent from '../DynamicComponent/DynamicComponent';
+// import DynamicComponent from '../DynamicComponent/DynamicComponent';
 import routifyString from '../../helpers/routifyString';
 import Home from '../Home/Home';
 import Listings from '../Listings/Listings';
@@ -17,6 +17,7 @@ import StaffingAgencies from '../StaffingAgencies/StaffingAgencies';
 import GeneralNotes from '../GeneralNotes/GeneralNotes';
 import SignIn from '../SignIn/SignIn';
 import SignUp from '../SignUp/SignUp';
+import SignOut from '../SignOut/SignOut';
 
 class Layouts extends React.Component {
   static contextType = GlobalContext;
@@ -46,7 +47,7 @@ class Layouts extends React.Component {
               {signedIn ?
                 <>
                   <Nav.Link href={'/#'}>Dashboard</Nav.Link>
-                  <Nav.Link href={'/#'} onClick={(() => this.signOutHandler())}>Sign Out</Nav.Link>
+                  <Nav.Link href={'/#'}><SignOut>Sign Out</SignOut></Nav.Link>
                 </>
                 :
                 <>

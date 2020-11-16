@@ -1,4 +1,5 @@
 import React from 'react';
+import { GlobalContext } from '../../contexts/global-context';
 import axios from 'axios';
 import ajaxPath from '../../helpers/ajax';
 import { uniqueIdGenerator } from '../../helpers/f';
@@ -7,9 +8,8 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 
-
-
 class Forms extends React.Component {
+  static contextType = GlobalContext;
 
   constructor() {
     super();
@@ -46,6 +46,13 @@ class Forms extends React.Component {
   }
 
   postRecord = (postEndpoint, postJSON, e) => {
+    const { userID } = this.context;
+    postJSON['user_id'] = userID;
+    if (this.props.note !== undefined) {
+      const { note } = this.props;
+      postJSON['table_name'] = note.tableName;
+      postJSON['record_id'] = note.recordID;
+    }
     // this.addUniqueID(postJSON);
     // console.log('postJSON',postJSON);
     axios.post(ajaxPath(postEndpoint), postJSON)

@@ -5,6 +5,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Tables from '../Tables/Tables';
 import Forms from '../Forms/Forms';
+import PopOpen from '../PopOpen/PopOpen';
 
 class Tasks extends React.Component {
   
@@ -38,8 +39,16 @@ class Tasks extends React.Component {
   }
 
   taskSelectHandler = (rowData) => {
-    console.log(rowData,rowData.id);
+    // console.log(rowData,rowData.id);
     this.getSubtasks(rowData.id);
+  }
+
+  addTaskData = () => {
+    this.getTasks();
+  }
+
+  addSubtaskData = () => {
+    this.getSubtasks();
   }
 
   componentDidMount() {
@@ -54,18 +63,34 @@ class Tasks extends React.Component {
       ['Status', 'status'],
       ['Task','task_text'],
       ['Start Date','created_at'],
-      ['Due Date','due_date'],
-      ['Notes','notes']
+      ['Due Date','due_date']
     ];
     const subtaskHeaders = [
       ['#','id'],
       ['Status', 'status'],
-      ['Subtask','subtask_text'],
-      ['Notes','notes']
+      ['Subtask','subtask_text']
     ];
+
+    const tasksInputArr = [['Task','task_text','textarea'],['Due Date','due_date','input'],['Note','note','textarea']];
+    const tasksInputPattern = [['12'],['4','8']];
+
+    const subtasksInputArr = [['Task','task_text','textarea'],['Note','note','textarea']];
+    const subtasksInputPattern = [['12'],['12']];
 
     return (
       <div>
+        <Row>
+          <Col lg={8}>
+            <PopOpen buttonName="Add Task">
+              <Forms endpoint={'tasks'} inputArr={tasksInputArr} inputPattern={tasksInputPattern} addData={this.addTaskData} />
+            </PopOpen>
+          </Col>
+          <Col lg={4}>
+            <PopOpen buttonName="Add Subtask">
+              <Forms endpoint={'subtasks'} inputArr={subtasksInputArr} inputPattern={subtasksInputPattern} addData={this.addSubtaskData} />
+            </PopOpen>
+          </Col>
+        </Row>
         <Row>
           <Col lg={8}>
             <Tables headers={taskHeaders} dataJSON={taskData} currentTable="tasks" selectedRow={this.taskSelectHandler} />

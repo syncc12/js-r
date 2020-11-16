@@ -25,6 +25,11 @@ function SignInHolder(props) {
 
 class SignIn extends React.Component {
 
+  signInHandler = (e) => {
+
+    e.preventDefault();
+  }
+
   render() {
     const { whole } = this.props;
 
