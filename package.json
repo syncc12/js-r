@@ -1,6 +1,9 @@
 {
   "name": "js-r",
   "version": "0.1.0",
+  "engines": {
+    "node": "14.8.0"
+  },
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-pro": "^5.15.1",
