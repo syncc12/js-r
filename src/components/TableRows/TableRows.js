@@ -130,7 +130,7 @@ class TableRows extends React.Component {
     return (
       <tr onClick={(() => this.selectedRow(data))}>
         {headers.map((header,index) => <TableCell key={index} cellIndex={index} header={header} data={data} applied={applied} transfered={transfered} currentTable={currentTable} considering={considering} openEvent={this.openEvent} appliedEvent={this.appliedEvent} transferEvent={this.transferEvent} />)}
-        <td><Notes tableName={currentTable} recordID={data['id']} route={`${currentTable}/${data['id']}/${pluralize(currentTable,1)}_notes`} /></td><td><Shows data={data}/></td>
+        <td><Notes tableName={currentTable} recordID={data['id']} route={`${currentTable}/${data['id']}/${pluralize(currentTable,1)}_notes`} /></td><td><Shows data={data} currentTable={currentTable} /></td>
       </tr>
     );
   }

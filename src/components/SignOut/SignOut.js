@@ -8,19 +8,23 @@ class SignOut extends React.Component {
   static contextType = GlobalContext;
 
   deleteSignOut = () => {
-    axios.delete(ajaxPath('users/sign_out'))
+    const { userID } = this.context;
+    axios.delete(ajaxPath(`users/sign_ins/${userID}`))
     .then((res) => {
-      console.log(res);
+      // console.log(res);
+      localStorage.clear();
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      localStorage.clear();
+      console.log(err)
+    });
   }
 
   signOutHandler = (e) => {
-    const { changeSignedInStatus, changeUserID, signedIn, userID } = this.context;
+    const { changeSignedInStatus, changeUserID } = this.context;
     this.deleteSignOut();
     changeSignedInStatus(false);
     changeUserID(0);
-    console.log(signedIn, userID);
     e.preventDefault();
   }
 

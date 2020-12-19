@@ -8,7 +8,6 @@ import { fab } from "@fortawesome/free-brands-svg-icons";
 import { fad } from "@fortawesome/pro-duotone-svg-icons";
 import { fal } from "@fortawesome/pro-light-svg-icons";
 import Layouts from './components/Layouts/Layouts';
-// import Layout from './stitch/Layout';
 
 library.add(fas, far, fab, fad, fal);
 
@@ -25,9 +24,9 @@ class App extends React.Component {
     };
     this.changeUserID = (newID) => this.setState({userID:newID});
     this.state = {
-      signedIn: true,
+      signedIn: false,
       changeSignedInStatus: this.changeSignedInStatus,
-      userID: 1,
+      userID: 0,
       changeUserID: this.changeUserID,
       cdFormat: false
     };
@@ -51,14 +50,27 @@ class App extends React.Component {
     }
   }
 
+  componentDidMount() {
+    const { changeSignedInStatus, changeUserID } = this.state;
+    const userJSON = JSON.parse(localStorage.getItem('userData'));
+
+    // console.log('userJSON',userJSON);
+    if (userJSON !== null) {
+      changeUserID(userJSON['user_id']);
+      changeSignedInStatus(true);
+    } else {
+      changeUserID(0);
+      changeSignedInStatus(false);
+    }
+    
+  }
+
   render() {
-    const { changeSignedInStatus, changeUserID, signedIn, userID } = this.state
 
     return (
       <div className="App">
         <GlobalContext.Provider value={this.state}>
-          <Layouts onNavLinkClicked={this.onNavLinkClicked} changeSignedInStatus={changeSignedInStatus} signedIn={signedIn}  changeUserID={changeUserID}userID={userID} />
-          {/*<Layout userID={1}/>*/}
+          <Layouts onNavLinkClicked={this.onNavLinkClicked} />
         </GlobalContext.Provider>
       </div>
     );

@@ -1,7 +1,9 @@
 import React from 'react';
 import './SignUp.scss';
+import { GlobalContext } from '../../contexts/global-context';
 import axios from 'axios';
 import ajaxPath from '../../helpers/ajax';
+import { useHistory } from "react-router-dom";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -25,7 +27,14 @@ function SignUpHolder(props) {
   );
 }
 
+function SignInRedirect() {
+  let history = useHistory();
+  history.push('/');
+  return (<></>);
+}
+
 class SignUp extends React.Component {
+  static contextType = GlobalContext;
 
   constructor() {
     super();
@@ -35,26 +44,52 @@ class SignUp extends React.Component {
       username: '',
       emailAddress: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      redirect: false
     }
   }
 
   postSignUp = (firstName, lastName, username, emailAddress, password, confirmPassword) => {
-    const postJSON = {user:{first_name:firstName, last_name:lastName, username:username, email:emailAddress, password:password, password_confirmation:confirmPassword}};
-    axios.post(ajaxPath('users'), postJSON)
+    const postJSON = {users_sign_up:{first_name:firstName, last_name:lastName, username:username, email:emailAddress, password:password, confirm_password:confirmPassword}};
+    // axios.post(ajaxPath('users'), postJSON, {withCredentials: true})
+    axios.post(ajaxPath('users/sign_ups'), postJSON)
     .then((res) => {
-      console.log(res);
+      // console.log(res);
+      if (res.status === 200) {
+        this.postSignIn(emailAddress,password);
+      }
     })
     .catch((err) => console.log(err));
   }
 
   signUpHandler = (e) => {
     this.setState({firstName:e.target[0].value,lastName:e.target[1].value,username:e.target[2].value,emailAddress:e.target[3].value,password:e.target[4].value,confirmPassword:e.target[5].value})
-    this.postSignUp(e.target[0].value,e.target[1].value,e.target[2].value,e.target[3].value,e.target[4].value,e.target[5].value,);
+    this.postSignUp(e.target[0].value,e.target[1].value,e.target[2].value,e.target[3].value,e.target[4].value,e.target[5].value,);    
     e.preventDefault();
   }
 
+  postSignIn = (emailAddress, password) => {
+    const { changeSignedInStatus, changeUserID } = this.context;
+    const postJSON = {users_sign_in:{email:emailAddress, password:password}};
+    // axios.post(ajaxPath('users/sign_in.json'), postJSON, {withCredentials: true})
+    axios.post(ajaxPath('users/sign_ins'), postJSON)
+    .then((res) => {
+      // console.log(res);
+      if (res.status === 201) {
+        localStorage.setItem('userData', JSON.stringify(res.data));
+        // this.setState({redirect: true});
+        changeSignedInStatus(true);
+      }
+    })
+    .catch((err) => console.log(err));
+  }
+
+  // componentDidMount() {
+  //   this.getSignUp();
+  // }
+
   render() {
+    const{ redirect } = this.state;
     const { whole } = this.props;
 
     return (
@@ -107,6 +142,7 @@ class SignUp extends React.Component {
             </div>
           </div>
         </Col>
+        {redirect && <SignInRedirect />}
       </SignUpHolder>
     );
   }

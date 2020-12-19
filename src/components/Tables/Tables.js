@@ -55,8 +55,8 @@ class Tables extends React.Component {
   }
 
   render() {
-    const { headers, dataJSON, currentTable } = this.props
-    const inData = dataJSON.sort(((a,b) => a.id > b.id));
+    const { headers, dataJSON, currentTable } = this.props;
+    const inData = dataJSON !== ' ' ? dataJSON.sort(((a,b) => a.id > b.id)) : [''];
 
     return (
       <div className="shadow-box">
@@ -64,10 +64,12 @@ class Tables extends React.Component {
           <thead>
             <tr>
               {headers.map((header,index) => <th key={index}>{this.headerConvert(header[0])}</th>)}
+              <th><FontAwesomeIcon icon={['fad','file-edit']} /></th>
+              <th><FontAwesomeIcon icon={['fad','info-circle']} /></th>
             </tr>
           </thead>
           <tbody>
-            {inData.map((data,index) => <TableRows key={index} headers={headers} data={data} rowNum={index} currentTable={currentTable} selectedRow={this.selectedRow} />)}
+            {dataJSON !== ' ' ? inData.map((data,index) => <TableRows key={index} headers={headers} data={data} rowNum={index} currentTable={currentTable} selectedRow={this.selectedRow} />) : <tr><td></td></tr>}
           </tbody>
         </Table>
       </div>

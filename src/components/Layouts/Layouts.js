@@ -15,22 +15,18 @@ import Jobs from '../Jobs/Jobs';
 import Tasks from '../Tasks/Tasks';
 import StaffingAgencies from '../StaffingAgencies/StaffingAgencies';
 import GeneralNotes from '../GeneralNotes/GeneralNotes';
+import Dashboard from '../Dashboard/Dashboard';
 import SignIn from '../SignIn/SignIn';
 import SignUp from '../SignUp/SignUp';
 import SignOut from '../SignOut/SignOut';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class Layouts extends React.Component {
   static contextType = GlobalContext;
 
-  signOutHandler = () => {
-    const { changeSignedInStatus, changeUserID, signedIn, userID } = this.props;
-    changeSignedInStatus(false);
-    changeUserID(0);
-    console.log(signedIn, userID);
-  }
-
   render() {
-    const { signedIn } = this.props;
+    // const { signedIn } = this.props;
+    const { signedIn } = this.context;
 
     return (
       <Router>
@@ -46,7 +42,7 @@ class Layouts extends React.Component {
             <Nav>
               {signedIn ?
                 <>
-                  <Nav.Link href={'/#'}>Dashboard</Nav.Link>
+                  <Nav.Link href={'/dashboard'}><FontAwesomeIcon icon={['fal','user-circle']} /></Nav.Link>
                   <Nav.Link href={'/#'}><SignOut>Sign Out</SignOut></Nav.Link>
                 </>
                 :
@@ -86,6 +82,9 @@ class Layouts extends React.Component {
               </Route>
               <Route path="/sign_up">
                 <SignUp whole={true} />
+              </Route>
+              <Route path="/dashboard">
+                <Dashboard />
               </Route>
             </Col>
           </Row>

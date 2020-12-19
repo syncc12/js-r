@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const GlobalContext = React.createContext({
-  signedIn: true,
+  signedIn: false,
   changeSignedInStatus: (newStatus='') => {},
   userID: 0,
   changeUserID: (newID) => {}
