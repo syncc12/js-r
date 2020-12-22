@@ -1,0 +1,22 @@
+@import "../../master.scss";
+
+.popopen-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.popopen-button-container {
+  display: flex;
+  flex-direction: row;
+}
+
+$pb-m-lr: 5px;
+.popopen-button {
+  margin-left: $pb-m-lr;
+  margin-right: $pb-m-lr;
+}
+
+.popopen-card {
+  display: flex;
+  flex-direction: column;
+}

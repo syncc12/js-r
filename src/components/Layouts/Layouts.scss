@@ -1,2 +1,7 @@
 @import "../../master.scss";
 
+$lc-m-lr: 5px;
+#layout-container {
+  margin-right: $lc-m-lr;
+  margin-left: $lc-m-lr;
+}

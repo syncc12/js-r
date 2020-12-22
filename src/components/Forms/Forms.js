@@ -54,7 +54,7 @@ class Forms extends React.Component {
       postJSON['record_id'] = note.recordID;
     }
     // this.addUniqueID(postJSON);
-    // console.log('postJSON',postJSON);
+    console.log('postJSON',postJSON);
     axios.post(ajaxPath(postEndpoint), postJSON)
     .then((res) => {
       this.props.addData();

@@ -3,6 +3,7 @@ import axios from 'axios';
 import ajaxPath from '../../helpers/ajax';
 import Tables from '../Tables/Tables';
 import Forms from '../Forms/Forms';
+import BatchAdd from '../BatchAdd/BatchAdd';
 import PopOpen from '../PopOpen/PopOpen';
 import CardDeck from '../CardDeck/CardDeck';
 
@@ -53,8 +54,9 @@ class Listings extends React.Component {
           <CardDeck data={listingData} />
           :
           <div>
-            <PopOpen buttonName="Add Listing">
+            <PopOpen buttonName={["Add Listing","Add Multiple Listings"]}>
               <Forms endpoint={'listings'} inputArr={inputArr} inputPattern={inputPattern} addData={this.addData} />
+              <BatchAdd endpoint={'listings'} inputArr={inputArr} addData={this.addData} />
             </PopOpen>
             <div>
               <Tables headers={headers} dataJSON={listingData} currentTable="listings" />

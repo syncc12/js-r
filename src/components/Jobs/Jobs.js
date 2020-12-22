@@ -4,6 +4,7 @@ import axios from 'axios';
 import ajaxPath from '../../helpers/ajax';
 import Tables from '../Tables/Tables';
 import Forms from '../Forms/Forms';
+import BatchAdd from '../BatchAdd/BatchAdd';
 import PopOpen from '../PopOpen/PopOpen';
 import CardDeck from '../CardDeck/CardDeck';
 
@@ -53,8 +54,9 @@ class Jobs extends React.Component {
           <CardDeck data={jobData} />
           :
           <div>
-            <PopOpen buttonName="Add Job">
+            <PopOpen buttonName={["Add Job","Add Multiple Jobs"]}>
               <Forms endpoint={'jobs'} inputArr={inputArr} inputPattern={inputPattern} addData={this.addData} />
+              <BatchAdd endpoint={'jobs'} inputArr={inputArr} addData={this.addData} />
             </PopOpen>
             <div>
               <Tables headers={headers} dataJSON={jobData} currentTable="jobs" />
