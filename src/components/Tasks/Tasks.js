@@ -1,6 +1,8 @@
 import React from 'react';
+import { GlobalContext } from '../../contexts/global-context';
 import axios from 'axios';
 import ajaxPath from '../../helpers/ajax';
+import checkSignedIn from '../../helpers/checkSignedIn';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Tables from '../Tables/Tables';
@@ -8,6 +10,7 @@ import Forms from '../Forms/Forms';
 import PopOpen from '../PopOpen/PopOpen';
 
 class Tasks extends React.Component {
+  static contextType = GlobalContext;
   
   constructor() {
     super();
@@ -18,24 +21,24 @@ class Tasks extends React.Component {
   }
 
   getTasks = () => {
-    axios.get(ajaxPath('tasks'))
-    .then((res) => this.setState({taskData: res.data}))
-    .catch((err) => console.log(err));
+    const { signedIn, userID } = this.context;
+    if (signedIn) {
+      axios.get(ajaxPath('tasks'), {params:{user_id:userID}})
+      .then((res) => this.setState({taskData: res.data}))
+      .catch((err) => console.log(err));
+    }
   }
 
   getSubtasks = (taskID) => {
-    axios.get(ajaxPath('subtasks'))
-    .then((res) => {
-      let filteredArr = [];
-      res.data.map((e) => {
-        if (e.task_id === taskID) {
-          filteredArr.push(e);
-        }
-      });
-      // console.log('filteredArr',filteredArr);
-      this.setState({subtaskData: filteredArr});
-    })
-    .catch((err) => console.log(err));
+    const { signedIn } = this.context;
+    if (signedIn) {
+      axios.get(ajaxPath('subtasks'), {params:{task_id:taskID}})
+      .then((res) => {
+        this.setState({subtaskData: res.data});
+
+      })
+      .catch((err) => console.log(err));
+    }
   }
 
   taskSelectHandler = (rowData) => {
@@ -51,7 +54,8 @@ class Tasks extends React.Component {
     this.getSubtasks();
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    await checkSignedIn(this.context);
     this.getTasks();
   }
 

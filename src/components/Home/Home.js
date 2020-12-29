@@ -1,6 +1,7 @@
 import React from 'react';
 import './Home.scss';
 import { GlobalContext } from '../../contexts/global-context';
+import checkSignedIn from '../../helpers/checkSignedIn';
 import { Switch, Route, Link } from "react-router-dom";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -43,11 +44,17 @@ function HomeSquareSwitch(props) {
 class Home extends React.Component {
   static contextType = GlobalContext;
 
+
+  async componentDidMount() {
+    await checkSignedIn(this.context);
+  }
+
   render() {
     const { signedIn } = this.context;
 
     return (
       <div id="home-page">
+
         {signedIn ?
           <div id="home-signed-in">
             <Row noGutters>

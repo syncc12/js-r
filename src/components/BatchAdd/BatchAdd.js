@@ -62,7 +62,7 @@ class BatchAdd extends React.Component {
     const { formRows, childValues } = this.state;
     const childValuesNewRow = new Array(childValues.length + 1).fill('')
     
-    this.setState({formRows: this.state.formRows + 1, childValues: childValuesNewRow});
+    this.setState({formRows: formRows + 1, childValues: childValuesNewRow});
   }
 
   render() {
@@ -76,7 +76,7 @@ class BatchAdd extends React.Component {
         <Col xs={12}>
           <div className="shadow-box">
             <Form onSubmit={(e) => this.postRecord(endpoint, this.state.childValues, e)}>
-              {rowMap.map((e,i) => <Form.Row><BatchAddForm endpoint={endpoint} inputArr={inputArr} rowIndex={i} setChildValues={this.setChildValues} value={childValues[i]} /></Form.Row>)}
+              {rowMap.map((e,i) => <Form.Row key={i}><BatchAddForm endpoint={endpoint} inputArr={inputArr} rowIndex={i} setChildValues={this.setChildValues} value={childValues[i]} /></Form.Row>)}
               <div id="add-row-button" onClick={(() => this.addRowControl())}><FontAwesomeIcon icon={['fad','plus-square']} /></div>
               <br/>
               <Button variant="primary" type="submit">

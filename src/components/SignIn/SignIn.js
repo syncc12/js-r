@@ -3,7 +3,7 @@ import './SignIn.scss';
 import { GlobalContext } from '../../contexts/global-context';
 import axios from 'axios';
 import ajaxPath from '../../helpers/ajax';
-import { useHistory } from "react-router-dom";
+import { createBrowserHistory } from 'history';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -27,12 +27,6 @@ function SignInHolder(props) {
   );
 }
 
-function SignInRedirect() {
-  let history = useHistory();
-  history.push('/');
-  return (<></>);
-}
-
 class SignIn extends React.Component {
   static contextType = GlobalContext;
 
@@ -40,25 +34,8 @@ class SignIn extends React.Component {
     super();
     this.state = {
       emailAddress: '',
-      password: '',
-      redirect: false
+      password: ''
     }
-  }
-
-  postSignInJSON = (emailAddress, password) => {
-    const { changeSignedInStatus, changeUserID } = this.context;
-    const postJSON = {user:{email:emailAddress, password:password}};
-    axios.post(ajaxPath('users/sign_in.json'), postJSON, {withCredentials: true})
-    .then((res) => {
-      // console.log(res);
-      if (res.status === 201) {
-        localStorage.setItem('userData', JSON.stringify(res.data));
-        // this.setState({redirect: true});
-        changeUserID(res.data.id);
-        changeSignedInStatus(true);
-      }
-    })
-    .catch((err) => console.log(err));
   }
 
   postSignIn = (emailAddress, password) => {
@@ -69,26 +46,45 @@ class SignIn extends React.Component {
     .then((res) => {
       // console.log(res);
       if (res.status === 201) {
-        // this.setState({redirect: true});
         localStorage.setItem('userData', JSON.stringify(res.data));
         changeUserID(res.data.id);
         changeSignedInStatus(true);
+        // window.location.reload();
       }
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      axios.get(ajaxPath('users/sign_ins'), {params:{email:emailAddress}})
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          localStorage.setItem('userData', JSON.stringify(res.data));
+          changeUserID(res.data.id);
+          changeSignedInStatus(true);
+        }
+      })
+      .catch((err) => {
+        console.log('User Not Yet Registered');
+        console.log(err);
+      });
+    });
   }
 
   signInHandler = (e) => {
+    let history = createBrowserHistory();
+
     this.setState({emailAddress:e.target[0].value,password:e.target[1].value});
-    // this.postSignInJSON(e.target[0].value,e.target[1].value);
     this.postSignIn(e.target[0].value,e.target[1].value);
+
+    // history.push('/');
+    if (history.location.pathname !== '/') {
+      window.location.pathname = '/';
+    }
     e.preventDefault();
   }
 
   render() {
-    const{ redirect } = this.state;
     const { whole } = this.props;
-    // console.log('redirect',redirect);
 
     return (
       <SignInHolder whole={whole}>
@@ -115,7 +111,6 @@ class SignIn extends React.Component {
             </div>
           </div>
         </Col>
-        {redirect && <SignInRedirect />}
       </SignInHolder>
     );
   }

@@ -1,0 +1,12 @@
+@import "../../master.scss";
+
+#pdf-iframe {
+  height: 500px;
+  width: 850px;
+  border: none;
+}
+
+#cover-letter-download, #cover-letter-title {
+  display: inline-block;
+  margin: 5px;
+}

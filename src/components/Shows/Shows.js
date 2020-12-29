@@ -1,10 +1,14 @@
 import React from 'react';
+import './Shows.scss';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import formatDate from '../../helpers/formatDate';
+import clr from '../../JSONs/coverLetterReplaceJSON';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import CoverLetters from '../CoverLetters/CoverLetters'
 
 function DetailRow(props) {
   const { dataTD } = props;
@@ -26,29 +30,13 @@ function DetailRow(props) {
     hrefName = dataTD[1] ? dataTD[1].replace('tel:','').replace(/\+\d/,'') : '';
     data = {type: 'icon', name: `tel:+1${hrefName}`, icon: ['fad','phone']};
   } else if (dataTD[0].toLowerCase().includes('created')) {
-    hrefName = dataTD[1] ? dataTD[1].replace('tel:','').replace(/\+\d/,'') : '';
-    data = {type: 'text', name: '', icon: []};
+    hrefName = dataTD[1] ? formatDate(dataTD[1]) : '';
+    data = {type: 'text', name: hrefName, icon: []};
   } else {
     data = {type: 'text', name: dataTD[1], icon: []};
   }
 
 
-  // if (typeof dataTD[1] === 'string' || dataTD[1] instanceof String) {
-  //   if (dataTD[1].match(urlRegex)) {
-  //     hrefName = dataTD[1];
-  //     data = {type: 'icon', name: hrefName, icon: ['fad','globe']};
-  //   } else if (dataTD[1].match(emailRegex)) {
-  //     hrefName = dataTD[1].replace('mailto:','');
-  //     data = {type: 'icon', name: `mailto:${hrefName}`, icon: ['fad','envelope']};
-  //   } else if (dataTD[1].match(phoneRegex)) {
-  //     hrefName = dataTD[1].replace('tel:','').replace(/\+\d/,'');
-  //     data = {type: 'icon', name: `tel:+1${hrefName}`, icon: ['fad','phone']};
-  //   } else {
-  //     data = {type: 'text', name: dataTD[1], icon: []};
-  //   }
-  // } else {
-  //   data = {type: 'text', name: '', icon: []};
-  // }
 
   title = dataTD[0].split('_').map((e,i) => {
     return(`${e.slice(0,1).toUpperCase()}${e.slice(1).toLowerCase()}`)
@@ -59,6 +47,28 @@ function DetailRow(props) {
       <th>{title}</th>
       <td>{data.type === 'icon' ? <a href={data.name}><FontAwesomeIcon icon={data.icon} /></a> : data.name}</td>
     </tr>
+  );
+}
+
+function CoverLetter(props) {
+  const { template, recordJSON } = props;
+
+  const findRegEx = /\[(.*?)\]/gi;
+  function replaceRegEx(match,p1) {
+    return recordJSON[clr[p1.toLowerCase()]];
+  }
+
+  let completeCL = template === '' ? '' : template.replace(findRegEx, replaceRegEx);
+
+  return (
+    <div className="show-cover-letter"><CoverLetters coverLetterText={completeCL} jobTitle={recordJSON['title']} company={recordJSON['company']} /></div>
+  );
+}
+
+function FollowUpMessage(props) {
+
+  return (
+    <div></div>
   );
 }
 
@@ -80,8 +90,8 @@ class Shows extends React.Component {
   }
 
   render() {
-    const { data, currentTable } = this.props;
-    const excludeTitles = ['id','job_description','notes','user_id','updated_at'];
+    const { data, currentTable, template } = this.props;
+    const excludeTitles = ['id','job_description','notes','user_id','job_id','updated_at'];
 
     return (
       <>
@@ -101,7 +111,7 @@ class Shows extends React.Component {
                     <tr><th>Name</th><th>Data</th></tr>
                   </thead>
                   <tbody>
-                    {Object.entries(data).map((dataTD,index) => excludeTitles.includes(dataTD[0]) === false ? <DetailRow key={index} dataTD={dataTD} /> : '')}
+                    {Object.entries(data).map((dataTD,index) => excludeTitles.includes(dataTD[0]) === false ? <DetailRow key={index} dataTD={dataTD} /> : null)}
                   </tbody>
                 </Table>
               </Col>
@@ -109,9 +119,11 @@ class Shows extends React.Component {
                 <Row>
                   <Col md={12}>
                     <h5>{currentTable === 'listings' ? 'Cover Letter' : ''}{currentTable === 'jobs' ? 'Follow Up' : ''}</h5>
-                    <div></div>
+                    {currentTable === 'listings' ? <CoverLetter template={template} recordJSON={data} /> : ''}
+                    {currentTable === 'jobs' ? <FollowUpMessage /> : ''}
                   </Col>
                 </Row>
+                <br />
                 <Row>
                   <Col md={12}>
                     <h5>Job Description</h5>

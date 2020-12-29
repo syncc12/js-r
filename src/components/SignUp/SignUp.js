@@ -78,7 +78,9 @@ class SignUp extends React.Component {
       if (res.status === 201) {
         localStorage.setItem('userData', JSON.stringify(res.data));
         // this.setState({redirect: true});
+        changeUserID(res.data.user_id);
         changeSignedInStatus(true);
+        // window.location.reload();
       }
     })
     .catch((err) => console.log(err));

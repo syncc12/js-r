@@ -24,8 +24,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 class Layouts extends React.Component {
   static contextType = GlobalContext;
 
+  
+
   render() {
-    // const { signedIn } = this.props;
     const { signedIn } = this.context;
 
     return (
@@ -56,41 +57,41 @@ class Layouts extends React.Component {
         </Navbar>
         <br />
 
-        <Switch>
           <div id="layout-container">
             <Row>
               <Col lg={12}>
-                <Route exact path="/">
-                  <Home />
-                </Route>
-                <Route path="/listings">
-                  <Listings />
-                </Route>
-                <Route path="/jobs">
-                  <Jobs />
-                </Route>
-                <Route path="/tasks">
-                  <Tasks />
-                </Route>
-                <Route path="/staffing_agencies">
-                  <StaffingAgencies />
-                </Route>
-                <Route path="/general_notes">
-                  <GeneralNotes />
-                </Route>
-                <Route path="/sign_in">
-                  <SignIn whole={true} />
-                </Route>
-                <Route path="/sign_up">
-                  <SignUp whole={true} />
-                </Route>
-                <Route path="/dashboard">
-                  <Dashboard />
-                </Route>
+                <Switch>
+                  <Route exact path="/">
+                    <Home />
+                  </Route>
+                  <Route path="/listings">
+                    <Listings />
+                  </Route>
+                  <Route path="/jobs">
+                    <Jobs />
+                  </Route>
+                  <Route path="/tasks">
+                    <Tasks />
+                  </Route>
+                  <Route path="/staffing_agencies">
+                    <StaffingAgencies />
+                  </Route>
+                  <Route path="/general_notes">
+                    <GeneralNotes />
+                  </Route>
+                  <Route path="/sign_in">
+                    <SignIn whole={true} />
+                  </Route>
+                  <Route path="/sign_up">
+                    <SignUp whole={true} />
+                  </Route>
+                  <Route path="/dashboard">
+                    <Dashboard />
+                  </Route>
+                </Switch>
               </Col>
             </Row>
           </div>
-        </Switch>
       </Router>
     );
   }

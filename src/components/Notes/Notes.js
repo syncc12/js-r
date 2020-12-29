@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 import ajaxPath from '../../helpers/ajax';
 import Forms from '../Forms/Forms';
+import formatDate from '../../helpers/formatDate';
 // import pluralize from 'pluralize'
 
 
@@ -92,7 +93,7 @@ class Notes extends React.Component {
                 {noteData.map((dataTD,index) => <tr key={`tr${index}`}>
                   <td key={`A${index+1}`}>{index+1}</td>
                   <td key={`B${index+1}`}>{dataTD['note_text']}</td>
-                  <td key={`C${index+1}`}>{dataTD['created_at']}</td>
+                  <td key={`C${index+1}`}>{formatDate(dataTD['created_at'])}</td>
                 </tr>)}
               </tbody>
             </Table>

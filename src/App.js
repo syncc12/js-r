@@ -17,60 +17,50 @@ class App extends React.Component {
     super();
     this.changeSignedInStatus = (newStatus='') => {
       if (newStatus === '') {
-        this.setState({signedIn:!this.state.signedIn});
+        const inverseStatus = !this.state.signedIn;
+        this.setState({signedIn:inverseStatus});
+        return inverseStatus;
       } else {
         this.setState({signedIn:newStatus});
+        return newStatus;
       }
     };
-    this.changeUserID = (newID) => this.setState({userID:newID});
+    this.changeUserID = (newID) => {
+      this.setState({userID:newID});
+      return newID;
+    };
     this.state = {
       signedIn: false,
       changeSignedInStatus: this.changeSignedInStatus,
       userID: 0,
-      changeUserID: this.changeUserID,
-      cdFormat: false
+      changeUserID: this.changeUserID
     };
   }
 
-  widthLogic = () => {
-    const smallWidth = [[5,1],[5,0]];
-    const bigWidth = [[10,1],[10,1]];
-    const { showListings, showJobs } = this.state;
-    if (showListings === true && showJobs === true) {
-      return smallWidth;
-    } else {
-      return bigWidth;
-    }
-  }
-
-  onNavLinkClicked = (linkName) => {
-    const { cdFormat } = this.state;
-    if (linkName === 'cards') {
-      this.setState(() => {return {cdFormat: !cdFormat}})
-    }
-  }
-
-  componentDidMount() {
-    const { changeSignedInStatus, changeUserID } = this.state;
-    const userJSON = JSON.parse(localStorage.getItem('userData'));
-
-    // console.log('userJSON',userJSON);
-    if (userJSON !== null) {
-      changeUserID(userJSON['user_id']);
-      changeSignedInStatus(true);
-    } else {
-      changeUserID(0);
-      changeSignedInStatus(false);
-    }
+  // componentDidMount() {
+  //   console.log('Remount');
+  //   const { changeSignedInStatus, changeUserID } = this.state;
+  //   const userJSON = JSON.parse(localStorage.getItem('userData'));
     
-  }
+  //   if (userJSON !== null) {
+  //     console.log('Signed In');
+  //     this.setState({userID:userJSON[0]['user_id'],signedIn:true});
+  //     // changeUserID(userJSON[0]['user_id']);
+  //     // changeSignedInStatus(true);
+  //   } else {
+  //     console.log('Not Signed In');
+  //     this.setState({userID:0,signedIn:false});
+  //     // changeUserID(0);
+  //     // changeSignedInStatus(false);
+  //   }
+  // }
 
   render() {
 
     return (
       <div className="App">
         <GlobalContext.Provider value={this.state}>
-          <Layouts onNavLinkClicked={this.onNavLinkClicked} />
+          <Layouts />
         </GlobalContext.Provider>
       </div>
     );

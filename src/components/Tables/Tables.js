@@ -55,7 +55,7 @@ class Tables extends React.Component {
   }
 
   render() {
-    const { headers, dataJSON, currentTable } = this.props;
+    const { headers, dataJSON, currentTable, showData } = this.props;
     const inData = dataJSON !== ' ' ? dataJSON.sort(((a,b) => a.id > b.id)) : [''];
 
     return (
@@ -69,7 +69,7 @@ class Tables extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {dataJSON !== ' ' ? inData.map((data,index) => <TableRows key={index} headers={headers} data={data} rowNum={index} currentTable={currentTable} selectedRow={this.selectedRow} />) : <tr><td></td></tr>}
+            {dataJSON !== ' ' ? inData.map((data,index) => <TableRows key={index} headers={headers} data={data} rowNum={index} currentTable={currentTable} selectedRow={this.selectedRow} showData={showData} />) : <tr><td></td></tr>}
           </tbody>
         </Table>
       </div>

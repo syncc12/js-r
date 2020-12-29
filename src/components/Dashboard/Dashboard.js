@@ -3,6 +3,7 @@ import './Dashboard.scss';
 import { GlobalContext } from '../../contexts/global-context';
 import axios from 'axios';
 import ajaxPath from '../../helpers/ajax';
+import checkSignedIn from '../../helpers/checkSignedIn';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Tab from 'react-bootstrap/Tab';
 import Row from 'react-bootstrap/Row';
@@ -75,9 +76,10 @@ function AccountInformationTab(props) {
 
 function CoverLetterTab(props) {
   const { saveTemplate, templateData } = props;
-  const filteredTemplateData = templateData.sort(function(a,b) {
-    return a.id < b.id;
-  })[0];
+
+  const filteredTemplateData = templateData === '' ? '' : templateData.sort(function(a,b) {
+      return a.id < b.id;
+    })[0];
 
   return (
     <Form onSubmit={((e) => saveTemplate('cover_letters',e))}>
@@ -226,7 +228,8 @@ class Dashboard extends React.Component {
     
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    await checkSignedIn(this.context);
     const templateArr = ['cover_letters','follow_up_emails'];
     for (let i of templateArr) {
       this.getTemplate(i);
