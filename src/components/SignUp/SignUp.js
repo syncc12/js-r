@@ -3,7 +3,7 @@ import './SignUp.scss';
 import { GlobalContext } from '../../contexts/global-context';
 import axios from 'axios';
 import ajaxPath from '../../helpers/ajax';
-import { useHistory } from "react-router-dom";
+import { createBrowserHistory } from 'history';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -27,12 +27,6 @@ function SignUpHolder(props) {
   );
 }
 
-function SignInRedirect() {
-  let history = useHistory();
-  history.push('/');
-  return (<></>);
-}
-
 class SignUp extends React.Component {
   static contextType = GlobalContext;
 
@@ -44,8 +38,7 @@ class SignUp extends React.Component {
       username: '',
       emailAddress: '',
       password: '',
-      confirmPassword: '',
-      redirect: false
+      confirmPassword: ''
     }
   }
 
@@ -54,8 +47,8 @@ class SignUp extends React.Component {
     // axios.post(ajaxPath('users'), postJSON, {withCredentials: true})
     axios.post(ajaxPath('users/sign_ups'), postJSON)
     .then((res) => {
-      // console.log(res);
-      if (res.status === 200) {
+      // console.log('Sign Up',res.status);
+      if (res.status === 201) {
         this.postSignIn(emailAddress,password);
       }
     })
@@ -63,8 +56,14 @@ class SignUp extends React.Component {
   }
 
   signUpHandler = (e) => {
+    let history = createBrowserHistory();
+
     this.setState({firstName:e.target[0].value,lastName:e.target[1].value,username:e.target[2].value,emailAddress:e.target[3].value,password:e.target[4].value,confirmPassword:e.target[5].value})
-    this.postSignUp(e.target[0].value,e.target[1].value,e.target[2].value,e.target[3].value,e.target[4].value,e.target[5].value,);    
+    this.postSignUp(e.target[0].value,e.target[1].value,e.target[2].value,e.target[3].value,e.target[4].value,e.target[5].value,);
+
+    if (history.location.pathname !== '/') {
+      window.location.pathname = '/';
+    }
     e.preventDefault();
   }
 
@@ -74,7 +73,7 @@ class SignUp extends React.Component {
     // axios.post(ajaxPath('users/sign_in.json'), postJSON, {withCredentials: true})
     axios.post(ajaxPath('users/sign_ins'), postJSON)
     .then((res) => {
-      // console.log(res);
+      // console.log('Sign In',res.status);
       if (res.status === 201) {
         localStorage.setItem('userData', JSON.stringify(res.data));
         // this.setState({redirect: true});
@@ -144,7 +143,6 @@ class SignUp extends React.Component {
             </div>
           </div>
         </Col>
-        {redirect && <SignInRedirect />}
       </SignUpHolder>
     );
   }

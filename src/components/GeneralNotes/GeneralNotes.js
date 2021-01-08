@@ -20,9 +20,12 @@ class GeneralNotes extends React.Component {
   }
 
   getGeneralNotes = () => {
-    axios.get(ajaxPath('general_notes'))
-    .then((res) => this.setState({generalNoteData: res.data}))
-    .catch((err) => console.log(err));
+    const { signedIn, userID } = this.context;
+    if (signedIn) {
+      axios.get(ajaxPath('general_notes'), {params:{user_id:userID}})
+      .then((res) => this.setState({generalNoteData: res.data}))
+      .catch((err) => console.log(err));
+    }
   }
 
   addData = () => {

@@ -21,9 +21,12 @@ class StaffingAgencies extends React.Component {
   }
 
   getStaffingAgencies = () => {
-    axios.get(ajaxPath('staffing_agencies'))
-    .then((res) => this.setState({staffingAgencyData: res.data}))
-    .catch((err) => console.log(err));
+    const { signedIn, userID } = this.context;
+    if (signedIn) {
+      axios.get(ajaxPath('staffing_agencies'), {params:{user_id:userID}})
+      .then((res) => this.setState({staffingAgencyData: res.data}))
+      .catch((err) => console.log(err));
+    }
   }
 
   addData = () => {
