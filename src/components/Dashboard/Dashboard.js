@@ -5,6 +5,7 @@ import axios from 'axios';
 import ajaxPath from '../../helpers/ajax';
 import checkSignedIn from '../../helpers/checkSignedIn';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Card from 'react-bootstrap/Card';
 import Tab from 'react-bootstrap/Tab';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -32,6 +33,7 @@ function AccountInformationTab(props) {
             <InputGroup.Text id="account-information-tab-username">Username</InputGroup.Text>
           </InputGroup.Prepend>
           <FormControl
+            readOnly
             aria-label="Username"
             aria-describedby="account-information-tab-username"
           />
@@ -46,10 +48,12 @@ function AccountInformationTab(props) {
             <InputGroup.Text id="account-information-tab-name">Name</InputGroup.Text>
           </InputGroup.Prepend>
           <FormControl
+            readOnly
             aria-label="First Name"
             aria-describedby="account-information-tab-name"
           />
           <FormControl
+            readOnly
             aria-label="Last Name"
             aria-describedby="account-information-tab-name"
           />
@@ -64,6 +68,7 @@ function AccountInformationTab(props) {
             <InputGroup.Text id="account-information-tab-email">Email</InputGroup.Text>
           </InputGroup.Prepend>
           <FormControl
+            readOnly
             aria-label="Email"
             aria-describedby="account-information-tab-email"
           />
@@ -147,6 +152,45 @@ function DocumentsTab(props) {
   )
 }
 
+function ApplicationQuestionsTab(props) {
+  const { qa, saveData } = props;
+  console.log('qa', qa);
+  return (
+    <div className="application_questions-list">
+      {qa.map((e,i) => {
+        return (
+          <Card key={i}>
+            <Card.Header>{e.question}</Card.Header>
+            <ListGroup variant="flush">
+              <ListGroup.Item>{e.answer}</ListGroup.Item>
+            </ListGroup>
+          </Card>
+        )
+      })}
+      <Form onSubmit={((e) => saveData('application_questions',e))}>
+        <Card>
+          <Card.Header>
+            <Form.Control id="application_question-question" placeholder="New Question" as="textarea" rows={1} />
+          </Card.Header>
+          <ListGroup variant="flush">
+            <ListGroup.Item>
+              <Form.Control id="application_question-answer" placeholder="New Answer" as="textarea" rows={1} />
+            </ListGroup.Item>
+          </ListGroup>
+        </Card>
+        <Button variant="primary" type="submit">Add</Button>
+      </Form>
+    </div>
+  )
+}
+
+function PersonalLinksTab(props) {
+
+  return (
+    <div>Personal Links</div>
+  )
+}
+
 function AboutTab(props) {
 
   return (
@@ -162,12 +206,76 @@ class Dashboard extends React.Component {
     this.state = {
       templates: {
         cover_letters: [''],
-        follow_up_emails: ['']
+        follow_up_emails: [''],
+      },
+      data: {
+        application_questions: ['']
       }
     }
   }
 
-  saveTemplate = (templateName, e) => {
+  saveTemplates = (templateName, e) => {
+    const { userID } = this.context;
+    let templateJSON = {}
+    templateJSON['user_id'] = userID;
+
+    let allTextAreas = e.target.getElementsByTagName('textarea');
+
+    for (let i of allTextAreas) {
+      const templateID = i.id.split('-')[1];
+      const templateValue = i.value
+      templateJSON[templateID] = templateValue;
+    }
+
+    const outerJSONName = `dashboards_${allTextAreas[0].id.split('-')[0]}`;
+    const finalJSON = {[outerJSONName]: templateJSON};
+
+    axios.post(ajaxPath(`dashboards/${templateName}`), finalJSON)
+    .then((res) => {
+      this.setState(prevState => ({
+        templates: {
+          ...prevState.templates,
+          [templateName]:['']
+        }
+      }));
+    })
+    .catch((err) => {
+      console.log(err);
+      this.setState(prevState => ({
+        template: {
+          ...prevState.templates,
+          [templateName]:['']
+        }
+      }));
+    });
+    e.preventDefault();
+  }
+
+  getTemplates = (templateName) => {
+    const { userID } = this.context;
+
+    axios.get(ajaxPath(`dashboards/${templateName}`), {params:{user_id:userID}})
+    .then((res) => {
+      this.setState(prevState => ({
+        templates: {
+          ...prevState.templates,
+          [templateName]:res.template
+        }
+      }));
+    })
+    .catch((err) => {
+      console.log(err);
+      this.setState(prevState => ({
+        templates: {
+          ...prevState.templates,
+          [templateName]:['']
+        }
+      }));
+    });
+    
+  }
+
+  saveData = (dataName, e) => {
     const { userID } = this.context;
     let dataJSON = {}
     dataJSON['user_id'] = userID;
@@ -183,45 +291,45 @@ class Dashboard extends React.Component {
     const outerJSONName = `dashboards_${allTextAreas[0].id.split('-')[0]}`;
     const finalJSON = {[outerJSONName]: dataJSON};
 
-    axios.post(ajaxPath(`dashboards/${templateName}`), finalJSON)
+    axios.post(ajaxPath(`dashboards/${dataName}`), finalJSON)
     .then((res) => {
       this.setState(prevState => ({
-        templates: {
-          ...prevState.templates,
-          [templateName]:''
+        data: {
+          ...prevState.data,
+          [dataName]:['']
         }
       }));
     })
     .catch((err) => {
       console.log(err);
       this.setState(prevState => ({
-        templates: {
-          ...prevState.templates,
-          [templateName]:''
+        data: {
+          ...prevState.data,
+          [dataName]:['']
         }
       }));
     });
     e.preventDefault();
   }
 
-  getTemplate = (templateName) => {
+  getData = (dataName) => {
     const { userID } = this.context;
 
-    axios.get(ajaxPath(`dashboards/${templateName}`), {params:{user_id:userID}})
+    axios.get(ajaxPath(`dashboards/${dataName}`), {params:{user_id:userID}})
     .then((res) => {
       this.setState(prevState => ({
-        templates: {
-          ...prevState.templates,
-          [templateName]:res.data
+        data: {
+          ...prevState.data,
+          [dataName]:res.data
         }
       }));
     })
     .catch((err) => {
       console.log(err);
       this.setState(prevState => ({
-        templates: {
-          ...prevState.templates,
-          [templateName]:''
+        data: {
+          ...prevState.data,
+          [dataName]:['']
         }
       }));
     });
@@ -230,23 +338,31 @@ class Dashboard extends React.Component {
 
   async componentDidMount() {
     await checkSignedIn(this.context);
+
     const templateArr = ['cover_letters','follow_up_emails'];
     for (let i of templateArr) {
-      this.getTemplate(i);
+      this.getTemplates(i);
+    }
+
+    const dataArr = ['application_questions'];
+    for (let i of dataArr) {
+      this.getData(i);
     }
   }
 
   render() {
-    const { templates } = this.state;
+    const { templates, data } = this.state;
 
     const tabArr = [
       {name: 'Settings', link: 'settings_tab', icon: <FontAwesomeIcon icon={['fad','cogs']} />, content: <SettingsTab />},
       {name: 'Account Information', link: 'account_information_tab', icon: <FontAwesomeIcon icon={['fad','portrait']} />, content: <AccountInformationTab />},
-      {name: 'Cover Letter', link: 'cover_letter_tab', icon: <FontAwesomeIcon icon={['fad','font']} />, content: <CoverLetterTab templateData={templates.cover_letters} saveTemplate={this.saveTemplate} />},
-      {name: 'Follow Up Email', link: 'follow_up_email_tab', icon: <FontAwesomeIcon icon={['fad','envelope']} />, content: <FollowUpEmailTab templateData={templates.follow_up_emails} saveTemplate={this.saveTemplate} />},
+      {name: 'Cover Letter', link: 'cover_letter_tab', icon: <FontAwesomeIcon icon={['fad','font']} />, content: <CoverLetterTab templateData={templates.cover_letters} saveTemplate={this.saveTemplates} />},
+      {name: 'Follow Up Email', link: 'follow_up_email_tab', icon: <FontAwesomeIcon icon={['fad','envelope']} />, content: <FollowUpEmailTab templateData={templates.follow_up_emails} saveTemplate={this.saveTemplates} />},
       {name: 'Networking Message', link: 'networking_message_tab', icon: <FontAwesomeIcon icon={['fad','comment-lines']} />, content: <NetworkingMessageTab />},
       {name: 'Freelance', link: 'freelance_tab', icon: <FontAwesomeIcon icon={['fad','laptop-house']} />, content: <FreelanceTab />},
       {name: 'Documents', link: 'documents_tab', icon: <FontAwesomeIcon icon={['fad','folder-open']} />, content: <DocumentsTab />},
+      {name: 'Application Questions', link: 'application_questions_tab', icon: <FontAwesomeIcon icon={['fad','map-marker-question']} />, content: <ApplicationQuestionsTab qa={data.application_questions} saveData={this.saveData} />},
+      {name: 'Personal Links', link: 'personal_links_tab', icon: <FontAwesomeIcon icon={['fad','lasso']} />, content: <PersonalLinksTab />},
       {name: 'About', link: 'about_tab', icon: <FontAwesomeIcon icon={['fad','question-circle']} />, content: <AboutTab />},
     ];
 

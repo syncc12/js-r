@@ -38,7 +38,12 @@ class SignUp extends React.Component {
       username: '',
       emailAddress: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      passwordValid: false,
+      passwordInvalid: false,
+      currentPassword: '',
+      confirmPasswordValid: false,
+      confirmPasswordInvalid: false
     }
   }
 
@@ -52,7 +57,9 @@ class SignUp extends React.Component {
         this.postSignIn(emailAddress,password);
       }
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err)
+    });
   }
 
   signUpHandler = (e) => {
@@ -70,27 +77,48 @@ class SignUp extends React.Component {
   postSignIn = (emailAddress, password) => {
     const { changeSignedInStatus, changeUserID } = this.context;
     const postJSON = {users_sign_in:{email:emailAddress, password:password}};
-    // axios.post(ajaxPath('users/sign_in.json'), postJSON, {withCredentials: true})
     axios.post(ajaxPath('users/sign_ins'), postJSON)
     .then((res) => {
       // console.log('Sign In',res.status);
       if (res.status === 201) {
         localStorage.setItem('userData', JSON.stringify(res.data));
-        // this.setState({redirect: true});
         changeUserID(res.data.user_id);
         changeSignedInStatus(true);
-        // window.location.reload();
       }
     })
     .catch((err) => console.log(err));
   }
 
-  // componentDidMount() {
-  //   this.getSignUp();
-  // }
+  checkPassword = (e) => {
+    const nowPassword = e.target.value;
+    if (nowPassword.length >= 1 && nowPassword.length <= 5) {
+      this.setState({passwordValid: false, passwordInvalid: true, currentPassword: nowPassword});
+    } else if (nowPassword.length >= 6) {
+      this.setState({passwordValid: true, passwordInvalid: false, currentPassword: nowPassword});
+    } else {
+      this.setState({passwordValid: false, passwordInvalid: false, currentPassword: nowPassword});
+    }
+    e.preventDefault();
+  }
+
+  checkConfirmPassword = (e) => {
+    const { currentPassword } = this.state;
+    const nowConfirmPassword = e.target.value;
+    if (nowConfirmPassword.length >= 1) {
+      if (nowConfirmPassword === currentPassword) {
+        this.setState({confirmPasswordValid: true, confirmPasswordInvalid: false});
+      } else {
+        this.setState({confirmPasswordValid: false, confirmPasswordInvalid: true});
+      }
+    } else {
+      this.setState({confirmPasswordValid: false, confirmPasswordInvalid: false});
+    }
+    
+    e.preventDefault();
+  }
 
   render() {
-    const{ redirect } = this.state;
+    const{ passwordValid, passwordInvalid, confirmPasswordValid, confirmPasswordInvalid } = this.state;
     const { whole } = this.props;
 
     return (
@@ -103,13 +131,13 @@ class SignUp extends React.Component {
                   <Col>
                     <Form.Group controlId="first_name">
                       <Form.Label>First Name</Form.Label>
-                      <Form.Control type="text" />
+                      <Form.Control required type="text" />
                     </Form.Group>
                   </Col>
                   <Col>
                     <Form.Group controlId="last_name">
                       <Form.Label>Last Name</Form.Label>
-                      <Form.Control type="text" />
+                      <Form.Control required type="text" />
                     </Form.Group>
                   </Col>
                 </Form.Row>
@@ -117,22 +145,22 @@ class SignUp extends React.Component {
                   <Col>
                     <Form.Group controlId="username">
                       <Form.Label>Username</Form.Label>
-                      <Form.Control type="text" />
+                      <Form.Control required type="text" />
                     </Form.Group>
                     <Form.Group controlId="email_address">
                       <Form.Label>Email address</Form.Label>
-                      <Form.Control type="email" />
+                      <Form.Control required type="email" />
                     </Form.Group>
                     <Form.Group controlId="password">
                       <Form.Label>Password</Form.Label>
-                      <Form.Control type="password" />
+                      <Form.Control required type="password" onChange={((e) => this.checkPassword(e))} isValid={passwordValid} isInvalid={passwordInvalid} />
                       <Form.Text className="text-muted">
                         (6 characters minimum)
                       </Form.Text>
                     </Form.Group>
                     <Form.Group controlId="password">
                       <Form.Label>Confirm Password</Form.Label>
-                      <Form.Control type="password" />
+                      <Form.Control required type="password" onChange={((e) => this.checkConfirmPassword(e))} isValid={confirmPasswordValid} isInvalid={confirmPasswordInvalid} />
                     </Form.Group>
                   </Col>
                 </Form.Row>
